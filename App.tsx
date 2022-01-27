@@ -8,7 +8,7 @@
  * @format
  */
 
-import React from 'react';
+import React, {useEffect} from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -19,6 +19,8 @@ import {
   View,
 } from 'react-native';
 
+import notifee from '@notifee/react-native';
+
 import {
   Colors,
   DebugInstructions,
@@ -26,6 +28,35 @@ import {
   LearnMoreLinks,
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
+
+import messaging, {
+  FirebaseMessagingTypes,
+} from '@react-native-firebase/messaging';
+
+// Note that an async function or a function that returns a Promise
+// is required for both subscribers.
+async function onMessageReceived(
+  message: FirebaseMessagingTypes.RemoteMessage,
+) {
+  await notifee.displayNotification({
+    title: message.notification?.title,
+    body: message.notification?.body,
+    ios: {
+      sound: 'default',
+    },
+  });
+}
+
+messaging().onMessage(onMessageReceived);
+messaging().setBackgroundMessageHandler(onMessageReceived);
+
+async function requestUserPermission() {
+  const authorizationStatus = await messaging().requestPermission();
+
+  if (authorizationStatus) {
+    console.log('Permission status:', authorizationStatus);
+  }
+}
 
 const Section: React.FC<{
   title: string;
@@ -57,6 +88,13 @@ const Section: React.FC<{
 
 const App = () => {
   const isDarkMode = useColorScheme() === 'dark';
+
+  useEffect(() => {
+    requestUserPermission();
+    messaging()
+      .getToken()
+      .then(data => console.log('TOKEN:', data));
+  }, []);
 
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,

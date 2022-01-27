@@ -6,10 +6,15 @@
     "android": "react-native run-android",
     "ios": "react-native run-ios",
     "start": "react-native start",
+    "start:clean": "watchman watch-del-all && react-native start --reset-cache",
     "test": "jest",
+    "tsc": "tsc",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
   },
   "dependencies": {
+    "@notifee/react-native": "^4.1.0",
+    "@react-native-firebase/app": "^14.3.0",
+    "@react-native-firebase/messaging": "^14.3.0",
     "react": "17.0.2",
     "react-native": "0.66.4"
   },

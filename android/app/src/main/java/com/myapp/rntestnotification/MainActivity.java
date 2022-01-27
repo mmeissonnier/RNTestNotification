@@ -1,4 +1,4 @@
-package com.rntestnotification;
+package com.myapp.rntestnotification;
 
 import com.facebook.react.ReactActivity;
 
